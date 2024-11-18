@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import { test } from './env/test';
+import { dev } from './env/dev';
+import { prod } from './env/prod';
+import { local } from './env/local';
+import dotenv from 'dotenv'
 
 /**
  * Read environment variables from file.
@@ -7,6 +12,19 @@ import { defineConfig, devices } from '@playwright/test';
 // import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+const environmentConfig = {
+  test: test,
+  dev: dev,
+  prod: prod,
+  local: local
+}
+
+export const environment = process.env.ENV || 'local';
+
+export const envconfig = environmentConfig[environment] || environmentConfig.local;
+
+require('dotenv').config()
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -39,7 +57,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
+    /* {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
@@ -47,7 +65,7 @@ export default defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-    },
+    }, */
 
     /* Test against mobile viewports. */
     // {
